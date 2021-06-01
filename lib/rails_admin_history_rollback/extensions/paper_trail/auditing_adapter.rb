@@ -8,6 +8,10 @@ module RailsAdmin
         def version_id
           @version.id
         end
+
+        def ip
+          @version.ip
+        end
       end
     end
   end

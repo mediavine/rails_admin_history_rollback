@@ -1,8 +1,3 @@
-= stylesheet_link_tag 'rails_admin/ra.history'
-= javascript_include_tag 'rails_admin/diff_match_patch'
-= javascript_include_tag 'rails_admin/jquery.pretty-text-diff'
-= javascript_include_tag 'rails_admin/ra.history'
-
 - params = request.params.except(:action, :controller, :model_name)
 - query = params[:query]
 - filter = params[:filter]
@@ -24,6 +19,7 @@
       - columns = []
       - columns << { property_name: "created_at", css_class: "created_at",link_text: t('admin.table_headers.created_at') }
       - columns << { property_name: "username",   css_class: "username",  link_text: t('admin.table_headers.username')   }
+      - columns << { property_name: "ip",         css_class: "ip",        link_text: t('admin.table_headers.ip')   }
       - columns << { property_name: "item",       css_class: "item",      link_text: t('admin.table_headers.item')       } if @general
       - columns << { property_name: "message",    css_class: "message",   link_text: t('admin.table_headers.message')    }
       - columns << { property_name: "rollback",   css_class: "rollback",  link_text: t('admin.history_rollback.table_headers.rollback')    }
@@ -40,6 +36,7 @@
         - unless object.created_at.nil?
           %td= l(object.created_at, format: :long, default: l(object.created_at, format: :long, locale: :en))
         %td= object.username
+        %td= object.try(:ip)
         - if @general
           - if o = @abstract_model.get(object.item)
             - label = o.send(@abstract_model.config.object_label_method)
@@ -55,4 +52,3 @@
 - unless params[:all] || !@history.respond_to?(:current_page)
   = paginate(@history, theme: lookup_context.exists?('kaminari/ra-twitter-bootstrap/_paginator') ? 'ra-twitter-bootstrap' : 'twitter-bootstrap', remote: true)
   = link_to(t("admin.misc.show_all"), send(path_method, params.merge(all: true)), class: "show-all btn pjax") unless (tc = @history.total_count) <= @history.size || tc > 100
-
